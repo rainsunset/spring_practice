@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!--模型版本号-->
+    <modelVersion>4.0.0</modelVersion>
+    <!--群组ID：单位域名反写-->
+    <groupId>com.ligw</groupId>
+    <!--项目ID-->
+    <artifactId>spring_practice</artifactId>
+    <!--项目版本号-->
+    <version>1.0-SNAPSHOT</version>
+    <!--打包类型 默认jar-->
+    <!--<packaging>war</packaging>-->
+
+    <!--版本配置管理-->
+    <properties>
+        <!--构建信息-->
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!--spring版本-->
+        <spring.version>4.3.14.BUILD-SNAPSHOT</spring.version>
+    </properties>
+
+
+
+    <dependencies>
+        <!--spring jar包间依赖关系 参考博客：http://blog.csdn.net/myspacedemen/article/details/37315865 -->
+        <!--spring 相关jar-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
+</project>

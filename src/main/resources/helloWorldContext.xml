@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--配置Bean-->
+    <bean id="helloWorld" class="com.ligw.helloworld.HelloWorld">
+        <!--prop调用Bean的set方法实现初始化实例对象-->
+        <property name="grettings" value="Hello Spring"></property>
+    </bean>
+
+    <!--
+        IOC (Inversion of control):反转控制-反转资源获取方向
+        DI (Dependency Injection)：依赖注入-组件以约定好的方式接受来自容器的资源注入
+        -->
+
+        </beans>

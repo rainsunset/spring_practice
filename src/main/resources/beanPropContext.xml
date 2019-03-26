@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:comtext="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+        ">
+
+    <!--配置Bean
+
+        class:bean的全类名，通过反射方式在IOC容器中创建Bean，所以要求Bean中必须有无参的构造器
+        id：标识容器中的Bean id 唯一
+
+        属性配置：属性注入
+                构造器注入
+                工厂方法注入(用的很少)
+
+    -->
+
+    <bean id="car" class="com.ligw.beanprop.Car">
+        <!--属性注入  通过set方法注入-->
+        <property name="color" value="red"/>
+    </bean>
+
+    <bean id="car2" class="com.ligw.beanprop.Car">
+        <!--构造方法注入  通过构造器注入-->
+        <constructor-arg value="binli"/>
+        <constructor-arg value="black"/>
+        <constructor-arg value="788"/>
+    </bean>
+
+    <bean id="car3" class="com.ligw.beanprop.Car">
+        <!--构造方法注入  通过构造器注入 配置了参数顺序-->
+        <constructor-arg index="0" value="aodi"/>
+        <constructor-arg index="2" value="666"/>
+        <constructor-arg index="1" value="yello"/>
+    </bean>
+
+    <bean id="car4" class="com.ligw.beanprop.Car">
+        <!--构造器方法注入 通过构造器注入
+            可以指定参数的类型 以区分重载的构造器-->
+        <constructor-arg type="java.lang.String">
+            <!--如果属性值包含特殊字符 可以使用<![CDATA[]]>包裹起来-->
+            <value><![CDATA[<baoma>]]></value>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String">
+            <!--还可以是value子节点-->
+            <value >oringe</value>
+        </constructor-arg>
+        <constructor-arg value="333" type="double"></constructor-arg>
+    </bean>
+
+    <bean id="person" class="com.ligw.beanprop.Person">
+        <property name="name" value="Mick"></property>
+        <property name="age" value="17"></property>
+        <!--可以使用 property 的 ref 属性建立bean之间的引用关系-->
+        <!--写法1:ref属性-->
+        <!--<property name="car" ref="car4"></property>-->
+        <!--写法2：ref标签-->
+        <!--<property name="car">-->
+            <!--<ref bean="car4"/>-->
+        <!--</property>-->
+        <!--写法3：内部Bean 只能自己使用-->
+        <property name="car">
+            <bean class="com.ligw.beanprop.Car">
+                <constructor-arg value="fute"></constructor-arg>
+                <constructor-arg value="orange"></constructor-arg>
+                <constructor-arg value="777"></constructor-arg>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="person2" class="com.ligw.beanprop.Person">
+        <constructor-arg index="0" value="kangkang"></constructor-arg>
+        <constructor-arg index="1" value="12"></constructor-arg>
+        <!--<constructor-arg ref="car2"></constructor-arg>-->
+        <!--null的专有标记  测试发现需要指定null为哪个参数-->
+        <constructor-arg index="2"><null/></constructor-arg>
+    </bean>
+
+    <!--级联属性-->
+    <bean id="person3" class="com.ligw.beanprop.Person">
+        <constructor-arg value="Jack"></constructor-arg>
+        <constructor-arg value="17"></constructor-arg>
+        <constructor-arg ref="car"></constructor-arg>
+        <!--级联属性赋值-->
+        <property name="car.name" value="changan"></property>
+    </bean>
+    <bean id="person4" class="com.ligw.beanprop.Person">
+        <property name="name" value="Mick"></property>
+        <property name="age" value="17"></property>
+        <!--创建级联属性赋值时要先创建父对象 不然会报错-->
+        <property name="car" ref="car"></property>
+        <property name="car.price" value="1000"></property>
+    </bean>
+
+    <!--集合属性-->
+    <bean id="company" class="com.ligw.beanprop.Company">
+        <property name="name" value="zhiguan"></property>
+        <property name="staff">
+            <!--使用List 节点为List或数组属性的参数赋值-->
+            <list>
+                <ref bean="person"/>
+                <ref bean="person2"/>
+                <bean class="com.ligw.beanprop.Person">
+                    <property name="name" value="huanghuang"></property>
+                </bean>
+            </list>
+        </property>
+        <!--使用set标签为Java.util.set属性参数赋值-->
+        <!--使用map标签为Map属性参数赋值-->
+        <property name="bus">
+            <map>
+                <entry key="car" value-ref="car"></entry>
+                <entry key="car2">
+                    <ref bean="car2"/>
+                </entry>
+                <entry key="car1">
+                    <bean class="com.ligw.beanprop.Car">
+                        <property name="name" value="jili"></property>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.ligw.beanprop.DataSource">
+        <property name="properties">
+            <!--使用props和prop为properties属性的参数赋值-->
+            <props>
+                <prop key="user">root</prop>
+                <prop key="password">123456</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--使用Util命名空间可以声明单例的集合bean 以被其他bean引用-->
+    <util:list id="carList">
+        <ref bean="car"></ref>
+        <ref bean="car3"></ref>
+    </util:list>
+
+    <!--通过p 命名空间对bean的属性赋值-->
+    <bean id="person5" class="com.ligw.beanprop.Person"
+          p:name="mack" p:age="12" p:car-ref="car4"></bean>
+
+    <!--可使用autowire属性制定自动装配方式-->
+    <!--byName 依据bean的名字和当前bean的setter风格的属性名进行自动装配，若有匹配的则自动装配 没有匹配的 则不赋值-->
+    <!--byType 依据bean的类型和当前bean的属性类型进行自动装配 若IOC容器中有一个以上的类型匹配的bean则抛异常-->
+    <!--使用自动装配第一必须为所有属性使用自动装配  第二不能同时使用byType和ByName-->
+    <bean id="worker" class="com.ligw.beanprop.Worker"
+        p:name="xiaohuang" p:age="12" autowire="byName"></bean>
+
+    <!--bean 配置的继承 使用bean的parent属性指定继哪个bean的属性
+        子bean可以覆盖继承过来的配置 父bean可以作为一个模板-->
+    <bean id="address_p" class="com.ligw.beanprop.Address"
+        p:city="Beijing" p:street="dahutong"></bean>
+
+    <!--抽象bean 不能被实例化 只能被继承-->
+    <!--并不是bena里面的所有属性都会被继承 比如 abstract 和 autowire-->
+    <bean id="address_pa" class="com.ligw.beanprop.Address"
+        p:city="Beijing" p:street="wudaokou" abstract="true"></bean>
+
+    <!--只有抽象bena可以不指定类型-->
+    <bean id="address_pa2" p:city="Beijing" p:street="wudaokou" abstract="true"></bean>
+    <bean id="address1" parent="address_p" p:city="Tianjin"></bean>
+    <bean id="address2" parent="address_pa" p:city="Tianjin"></bean>
+    <bean id="address3" class="com.ligw.beanprop.Address" parent="address_pa2" p:city="wuhan"></bean>
+
+    <!--bean之间的依赖关系-->
+    <!--depends-on 设定bean的前置依赖bean 前置bean 会在本bean实例化前创建好-->
+    <!--如果前置依赖多个bean 则可以通过通过 逗号或空格 的方式配置bean名称-->
+    <bean id="worker_dep" class="com.ligw.beanprop.Worker"
+          p:name="lilei" p:age="12" depends-on="car3 company"></bean>
+
+    <!--使用bean 的scope配置bean的作用域-->
+        <!--bean 作用域默认是单例的即sigleton 在容器初始化时就创建bena 在IOC容器生命周期内只创建一个bean）
+        scope 属性为prototype时 容器初始化时不创建bean 每次从容器获取时都会创新创建一个bean-->
+    <bean id="person6" class="com.ligw.beanprop.Person" scope="prototype">
+        <property name="car" ref="car"></property>
+        <property name="name" value="xiaoming"></property>
+    </bean>
+
+    <!--利用 Spring 的 PropertyPlaceholderConfigurer 的 BeanFactory后置处理器 获取配置在 属性文件 中的变量-->
+    <!--step:导入命名空间 属性配置文件-->
+    <comtext:property-placeholder location="classpath:config.properties"/>
+    <bean id="person_prop" class="com.ligw.beanprop.Person">
+        <property name="name" value="${name}"></property>
+        <property name="age" value="${age}"></property>
+    </bean>
+
+    <!--Spring SpEl表达式 即#{}赋值-->
+    <bean id="person_spel" class="com.ligw.beanprop.Person">
+        <!--用SpEl赋值时 值为Spring字符串时需要加上单引号以区分-->
+        <!--<property name="name" value="#{'dalei'}"></property>-->
+        <!--SpEl 还可以赋其他类型字面值-->
+        <!--<property name="age" value="#{13}"></property>-->
+        <!--引用其他对象-->
+        <property name="car" value="#{car2}"></property>
+        <!--引用其他对象属性-->
+        <!--<property name="age" value="#{person3.age}"></property>-->
+        <!--支持方法的链式操作-->
+        <!--<property name="name" value="#{car2.getPrice().toString()}"></property>-->
+        <!--支持算术运算符 + - * / % ^-->
+        <!--支持比较运算符 < > == <= >= lt gt eq le ge -->
+        <!--支持逻辑运算符 and or not | -->
+        <!--支持 if-else三目运算符-->
+        <!--支持正则表达式 matches-->
+        <!--可调用T()调用一个累的静态方法 或静态属性 返回一个ClassObjecy 然后再调用其属性-->
+        <property name="age" value="#{T(java.lang.Math).PI * 80}"></property>
+        <property name="name" value="#{car2.price > 3000 ? '金陵' : '白领'}"></property>
+        
+    </bean>
+
+
+
+
+
+</beans>

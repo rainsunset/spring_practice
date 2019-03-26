@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
+
+    <!--bean的IOC容器和生命周期-->
+
+    <!--IOC容器可以管理Bean的生命周期-->
+    <!--
+        通过构造器或工厂方法创建Bean
+        对Bean的属性设置值 和 对其他benn的引用
+        调用Bean的初始化方法
+        bean可以使用了
+        容器关闭时调用bean的销毁方法
+
+        bean的生命设置里init-method 和 destroy-method 属性 为Bean指定初始化和销毁方法
+    -->
+
+    <bean id="penson_lifecycle" class="com.ligw.beanlifecycle.Penson"
+        init-method="initmethod"
+        destroy-method="destorymeth">
+        <property name="name" value="lihua"></property>
+    </bean>
+
+    <!--Bean 的后置处理器允许在调用初始化方法前后对Bean进行额外的操作-->
+    <!--Bean 后置处理器会对IOC容器中所有Bean实例逐一处理 而非单一实例 可用于检查Bean属性检查 或者修改值
+        需实现 接口 BeanPostProcessor （org.springframework.factory.config）-->
+    <!--不用指定id-->
+    <bean class="com.ligw.beanlifecycle.MyBeanPostProcessor"></bean>
+
+</beans>
